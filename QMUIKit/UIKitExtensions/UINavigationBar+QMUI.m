@@ -359,6 +359,21 @@ NSString *const kShouldFixTitleViewBugKey = @"kShouldFixTitleViewBugKey";
 }
 
 - (UIView *)qmui_contentView {
+    if (@available(iOS 26.0, *)) {
+        for (UIView *subview in self.subviews) {
+            if ([NSStringFromClass(subview.class) containsString:@"NavigationBarContentView"]) {
+                return subview;
+            }
+        }
+        NSObject *provider = [self valueForKey:@"visualProvider"];
+        __block UIView *result = nil;
+        [provider qmui_enumrateIvarsUsingBlock:^(Ivar _Nonnull ivar, NSString * _Nonnull ivarDescription) {
+            if (!result && [ivarDescription containsString:@"contentView"]) {
+                result = getObjectIvarValue(provider, ivar);
+            }
+        }];
+        return result;
+    }
     return [self valueForKeyPath:@"visualProvider.contentView"];
 }
 
