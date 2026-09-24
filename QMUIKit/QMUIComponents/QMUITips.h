@@ -16,6 +16,8 @@
 #import <UIKit/UIKit.h>
 #import "QMUIToastView.h"
 
+#define DefaultTipsParentView (UIApplication.sharedApplication.qmui_delegateWindow)
+
 // 自动计算秒数的标志符，在 delay 里面赋值 QMUITipsAutomaticallyHideToastSeconds 即可通过自动计算 tips 消失的秒数
 UIKIT_EXTERN const NSInteger QMUITipsAutomaticallyHideToastSeconds;
 
