@@ -1073,6 +1073,10 @@ static NSInteger isHighPerformanceDevice = -1;
 }
 
 + (CGFloat)statusBarHeightConstant {
+    if (QMUIHelper.isUsedLiquidGlass) {
+        return [QMUIHelper statusBarHeight];
+    }
+    
     NSString *deviceModel = [QMUIHelper deviceModel];
     
     if (!UIApplication.sharedApplication.statusBarHidden) {
@@ -1105,6 +1109,27 @@ static NSInteger isHighPerformanceDevice = -1;
         return 47;
     }
     return (IS_54INCH_SCREEN && IOS_VERSION >= 15.0) ? 50 : 44;
+}
+
++ (CGFloat)statusBarHeight {
+    UIWindow *keyWindow = nil;
+    NSSet<UIScene *> *connectedScenes = UIApplication.sharedApplication.connectedScenes;
+    for (UIScene *scene in connectedScenes) {
+        if (scene.activationState == UISceneActivationStateForegroundActive && [scene isKindOfClass:[UIWindowScene class]]) {
+            UIWindowScene *windowScene = (UIWindowScene *)scene;
+            for (UIWindow *window in windowScene.windows) {
+                if (window.isKeyWindow) {
+                    keyWindow = window;
+                    break;
+                }
+            }
+        }
+    }
+    if (!keyWindow) {
+        keyWindow = UIApplication.sharedApplication.keyWindow;
+    }
+    CGFloat statusBarHeight = keyWindow.windowScene.statusBarManager.statusBarFrame.size.height;
+    return statusBarHeight;
 }
 
 + (CGFloat)navigationBarMaxYConstant {
