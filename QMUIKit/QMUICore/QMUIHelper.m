@@ -325,6 +325,13 @@ static CGFloat pixelOne = -1.0f;
             @"iPhone17,2" : @"iPhone 16 Pro Max",
             @"iPhone17,3" : @"iPhone 16",
             @"iPhone17,4" : @"iPhone 16 Plus",
+            @"iPhone18,1" : @"iPhone 17 Pro",
+            @"iPhone18,2" : @"iPhone 17 Pro Max",
+            @"iPhone18,3" : @"iPhone 17",
+            @"iPhone18,4" : @"iPhone Air",
+            @"iPhone19,2" : @"iPhone 18 Pro",
+            @"iPhone19,3" : @"iPhone 18 Pro Max",
+            @"iPhone19,4" : @"iPhone Duo",
             
             @"iPad1,1" : @"iPad 1",
             @"iPad2,1" : @"iPad 2 (WiFi)",
@@ -1132,6 +1139,38 @@ static NSInteger isHighPerformanceDevice = -1;
     return statusBarHeight;
 }
 
++ (CGFloat)navigationBarHeight {
+    CGFloat result = 0;
+    if (IS_IPAD) {
+        result += 50;
+    } else if (IS_LANDSCAPE) {
+        result += PreferredValueForVisualDevice(44, 32);
+    } else {
+        result += 44;
+        if (QMUIHelper.isUsedLiquidGlass) {
+            result += 10;
+        }
+        if (QMUIHelper.isUsedLiquidGlass) {
+            if ([@[
+                @"iPhone 16 Pro",
+                @"iPhone 17",
+                @"iPhone 18",
+            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+                return [QMUIHelper.deviceName hasPrefix:item];
+            }]) {
+                result += 8;//62
+            } else if ([@[
+                @"iPhone Air",
+            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+                return [QMUIHelper.deviceName hasPrefix:item];
+            }]) {
+                result += 14;//68
+            }
+        }
+    }
+    return result;
+}
+
 + (CGFloat)navigationBarMaxYConstant {
     CGFloat result = QMUIHelper.statusBarHeightConstant;
     if (IS_IPAD) {
@@ -1140,20 +1179,48 @@ static NSInteger isHighPerformanceDevice = -1;
         result += PreferredValueForVisualDevice(44, 32);
     } else {
         result += 44;
-        if ([@[
-            @"iPhone 16 Pro",
-        ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
-            return [QMUIHelper.deviceName hasPrefix:item];
-        }]) {
-            result += 2 + PixelOne;// 56.333
-        } else if ([@[
-            @"iPhone 14 Pro",
-            @"iPhone 15",
-            @"iPhone 16",
-        ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
-            return [QMUIHelper.deviceName hasPrefix:item];
-        }]) {
-            result -= PixelOne;// 53.667
+        if (QMUIHelper.isUsedLiquidGlass) {
+            result += 10;
+        }
+        if (QMUIHelper.isUsedLiquidGlass) {
+            if ([@[
+                @"iPhone 16 Pro",
+                @"iPhone 17",
+                @"iPhone 18",
+            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+                return [QMUIHelper.deviceName hasPrefix:item];
+            }]) {
+                result += 8;//62
+            } else if ([@[
+                @"iPhone Air",
+            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+                return [QMUIHelper.deviceName hasPrefix:item];
+            }]) {
+                result += 14;//68
+            }
+        } else {
+           if ([@[
+                @"iPhone 16 Pro",
+                @"iPhone 17 Pro",
+            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+                return [QMUIHelper.deviceName hasPrefix:item];
+            }]) {
+                result += 2 + PixelOne;// 56.333
+            } else if ([@[
+                @"iPhone 14 Pro",
+                @"iPhone 15",
+                @"iPhone 16",
+            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+                return [QMUIHelper.deviceName hasPrefix:item];
+            }]) {
+                result -= PixelOne;// 53.667
+            } else if ([@[
+                @"iPhone Air",
+            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+                return [QMUIHelper.deviceName hasPrefix:item];
+            }]) {
+                result += 8 + PixelOne;// 62.333
+            }
         }
     }
     return result;
