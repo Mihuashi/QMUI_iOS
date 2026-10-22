@@ -211,7 +211,7 @@
 #define StatusBarHeightConstant [QMUIHelper statusBarHeightConstant]
 
 /// navigationBar 的静态高度
-#define NavigationBarHeight (IS_IPAD ? 50 : (IS_LANDSCAPE ? PreferredValueForVisualDevice(44, 32) : 44))
+#define NavigationBarHeight (IS_IPAD ? 50 : (IS_LANDSCAPE ? PreferredValueForVisualDevice(44, 32) : ((QMUIHelper.isUsedLiquidGlass) ? 62 : 44)))
 
 /// 代表(导航栏+状态栏)，这里用于获取其高度
 /// @warn 如果是用于 viewController，请使用 UIViewController(QMUI) qmui_navigationBarMaxYInViewCoordinator 代替
