@@ -22,6 +22,7 @@
 #import "UIViewController+QMUI.h"
 #import "UIGestureRecognizer+QMUI.h"
 #import "UIView+QMUI.h"
+#import "QMUINavigationButton.h"
 
 @interface QMUIViewControllerHideKeyboardDelegateObject : NSObject <UIGestureRecognizerDelegate, QMUIKeyboardManagerDelegate>
 
@@ -37,6 +38,7 @@
 }
 
 @property(nonatomic,strong,readwrite) QMUINavigationTitleView *titleView;
+@property(nonatomic,strong) UIButton *customBackButton;
 @end
 
 @implementation QMUICommonViewController
@@ -104,6 +106,7 @@
     }
     
     [self initSubviews];
+    [self setupCustomBackButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -214,6 +217,35 @@
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return self.supportedOrientationMask;
+}
+
+#pragma mark - 自定义返回按钮
+- (void)setupCustomBackButton {
+    if (QMUIHelper.isUsedLiquidGlass) {
+        self.customBackButton = [[QMUINavigationButton alloc] initWithType:QMUINavigationButtonTypeBack];
+        [self.customBackButton addTarget:self action:@selector(customBackAction) forControlEvents:UIControlEventTouchUpInside];
+        self.customBackButton.qmui_outsideEdge = UIEdgeInsetsMake(-30, -20, -20, -20);
+        UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:self.customBackButton];
+        if (@available(iOS 26.0, *)) {
+            leftItem.hidesSharedBackground = YES;
+        }
+        self.navigationItem.leftBarButtonItem = leftItem;
+    }
+}
+
+- (void)customBackAction {
+    if (self.navigationController) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+- (void)setHideCustomBackButton:(BOOL)hideCustomBackButton {
+    _hideCustomBackButton = hideCustomBackButton;
+    if (hideCustomBackButton) {
+        self.customBackButton.hidden = hideCustomBackButton;
+    }
 }
 
 @end
