@@ -250,6 +250,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) CGFloat statusBarHeightConstant;
 
 /**
+ 状态栏的高度，通过UIApplication.sharedApplication.connectedScenes 获取的高度
+ */
+@property (class, nonatomic, readonly) CGFloat statusBarFrameHeight;
+
+/**
  navigationBar 的静态高度，不包含StatusBarHeight
  */
 @property(class, nonatomic, readonly) CGFloat navigationBarHeight;

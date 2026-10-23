@@ -1081,7 +1081,7 @@ static NSInteger isHighPerformanceDevice = -1;
 
 + (CGFloat)statusBarHeightConstant {
     if (QMUIHelper.isUsedLiquidGlass) {
-        return [QMUIHelper statusBarHeight];
+        return [QMUIHelper statusBarFrameHeight];
     }
     
     NSString *deviceModel = [QMUIHelper deviceModel];
@@ -1118,7 +1118,7 @@ static NSInteger isHighPerformanceDevice = -1;
     return (IS_54INCH_SCREEN && IOS_VERSION >= 15.0) ? 50 : 44;
 }
 
-+ (CGFloat)statusBarHeight {
++ (CGFloat)statusBarFrameHeight {
     UIWindow *keyWindow = nil;
     NSSet<UIScene *> *connectedScenes = UIApplication.sharedApplication.connectedScenes;
     for (UIScene *scene in connectedScenes) {
@@ -1136,6 +1136,23 @@ static NSInteger isHighPerformanceDevice = -1;
         keyWindow = UIApplication.sharedApplication.keyWindow;
     }
     CGFloat statusBarHeight = keyWindow.windowScene.statusBarManager.statusBarFrame.size.height;
+    if (QMUIHelper.isUsedLiquidGlass) {
+        if ([@[
+            @"iPhone 16 Pro",
+            @"iPhone 17",
+            @"iPhone 18",
+        ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+            return [QMUIHelper.deviceName hasPrefix:item];
+        }]) {
+            statusBarHeight += 8;//62
+        } else if ([@[
+            @"iPhone Air",
+        ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+            return [QMUIHelper.deviceName hasPrefix:item];
+        }]) {
+            statusBarHeight += 14;//68
+        }
+    }
     return statusBarHeight;
 }
 
@@ -1149,23 +1166,6 @@ static NSInteger isHighPerformanceDevice = -1;
         result += 44;
         if (QMUIHelper.isUsedLiquidGlass) {
             result += 10;
-        }
-        if (QMUIHelper.isUsedLiquidGlass) {
-            if ([@[
-                @"iPhone 16 Pro",
-                @"iPhone 17",
-                @"iPhone 18",
-            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
-                return [QMUIHelper.deviceName hasPrefix:item];
-            }]) {
-                result += 8;//62
-            } else if ([@[
-                @"iPhone Air",
-            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
-                return [QMUIHelper.deviceName hasPrefix:item];
-            }]) {
-                result += 14;//68
-            }
         }
     }
     return result;
@@ -1182,46 +1182,28 @@ static NSInteger isHighPerformanceDevice = -1;
         if (QMUIHelper.isUsedLiquidGlass) {
             result += 10;
         }
-        if (QMUIHelper.isUsedLiquidGlass) {
-            if ([@[
-                @"iPhone 16 Pro",
-                @"iPhone 17",
-                @"iPhone 18",
-            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
-                return [QMUIHelper.deviceName hasPrefix:item];
-            }]) {
-                result += 8;//62
-            } else if ([@[
-                @"iPhone Air",
-            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
-                return [QMUIHelper.deviceName hasPrefix:item];
-            }]) {
-                result += 14;//68
-            }
-        } else {
-           if ([@[
-                @"iPhone 16 Pro",
-                @"iPhone 17 Pro",
-            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
-                return [QMUIHelper.deviceName hasPrefix:item];
-            }]) {
-                result += 2 + PixelOne;// 56.333
-            } else if ([@[
-                @"iPhone 14 Pro",
-                @"iPhone 15",
-                @"iPhone 16",
-            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
-                return [QMUIHelper.deviceName hasPrefix:item];
-            }]) {
-                result -= PixelOne;// 53.667
-            } else if ([@[
-                @"iPhone Air",
-            ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
-                return [QMUIHelper.deviceName hasPrefix:item];
-            }]) {
-                result += 8 + PixelOne;// 62.333
-            }
-        }
+        if ([@[
+             @"iPhone 16 Pro",
+             @"iPhone 17 Pro",
+         ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+             return [QMUIHelper.deviceName hasPrefix:item];
+         }]) {
+             result += 2 + PixelOne;// 56.333
+         } else if ([@[
+             @"iPhone 14 Pro",
+             @"iPhone 15",
+             @"iPhone 16",
+         ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+             return [QMUIHelper.deviceName hasPrefix:item];
+         }]) {
+             result -= PixelOne;// 53.667
+         } else if ([@[
+             @"iPhone Air",
+         ] qmui_firstMatchWithBlock:^BOOL(NSString *item) {
+             return [QMUIHelper.deviceName hasPrefix:item];
+         }]) {
+             result += 8 + PixelOne;// 62.333
+         }
     }
     return result;
 }
