@@ -70,9 +70,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 当前self.emptyView是否显示
 @property(nonatomic, assign, readonly, getter = isEmptyViewShowing) BOOL emptyViewShowing;
 
-///是否需要自定义返回按钮, 仅 iOS27 Liquid Glass 及以后版本有效
-@property (nonatomic, assign) BOOL needCustomBackButton;
-
 /**
  *  显示emptyView
  *  emptyView 的以下系列接口可以按需进行重写
