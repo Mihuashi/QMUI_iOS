@@ -107,6 +107,12 @@
     
     [self initSubviews];
     [self setupCustomBackButton];
+    // Xcode27 self.title赋值需要放在viewDidLoad中，否则不显示（原setupNavigationItems 放在viewWillAppear中Xcode27不显示title，考虑兼容性，viewWillAppear中依然也保留）
+    //⚠️目前的最优方案是放在viewDidLoad，后期如果有更好的方法，可以删除
+    if (QMUIHelper.isUsedLiquidGlass) {
+        [self setupNavigationItems];
+    }
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
