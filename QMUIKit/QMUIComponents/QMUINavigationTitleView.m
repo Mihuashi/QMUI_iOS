@@ -123,11 +123,17 @@
 }
 
 - (void)updateTitleLabelSize {
-    if (self.titleLabel.text.length > 0) {
-        // 这里用 CGSizeCeil 是特地保证 titleView 的 sizeThatFits 计算出来宽度是 pt 取整，这样在 layoutSubviews 我们以 px 取整时，才能保证不会出现水平居中时出现半像素的问题，然后由于我们对半像素会认为一像素，所以导致总体宽度多了一像素，从而导致文字布局可能出现缩略...
-        self.titleLabelSize = CGSizeCeil([self.titleLabel sizeThatFits:CGSizeMax]);
+    if (QMUIHelper.isUsedLiquidGlass) {
+        //Xcode27 self.title更新需要先给一下最大宽高，否则会显示1s留白再显示标题（俗称闪一下）例如：画师-榜单- 作品详情，榜单列表
+        CGSize size = [self.titleLabel sizeThatFits:CGSizeMax];
+        self.titleLabelSize = CGSizeMake(MAX(200, size.width), NavigationBarHeight);
     } else {
-        self.titleLabelSize = CGSizeZero;
+        if (self.titleLabel.text.length > 0) {
+            // 这里用 CGSizeCeil 是特地保证 titleView 的 sizeThatFits 计算出来宽度是 pt 取整，这样在 layoutSubviews 我们以 px 取整时，才能保证不会出现水平居中时出现半像素的问题，然后由于我们对半像素会认为一像素，所以导致总体宽度多了一像素，从而导致文字布局可能出现缩略...
+            self.titleLabelSize = CGSizeCeil([self.titleLabel sizeThatFits:CGSizeMax]);
+        } else {
+            self.titleLabelSize = CGSizeZero;
+        }
     }
 }
 
