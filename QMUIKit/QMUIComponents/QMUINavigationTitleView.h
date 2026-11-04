@@ -111,6 +111,10 @@ typedef NS_ENUM(NSInteger, QMUINavigationTitleViewAccessoryType) {
 /// 副标题的上下左右间距，当副标题不显示时，计算大小及布局时也不考虑这个间距，默认为 UIEdgeInsetsZero
 @property(nonatomic, assign) UIEdgeInsets subtitleEdgeInsets UI_APPEARANCE_SELECTOR;
 
+///标题的size默认最大值,为了兼容 Xcode 27 的LiquidGlass self.title更新赋值 留白1s闪一下的问题，只有iOS27 及以上版本使用
+///不统一处理（每个title样式不同，有titleView包含图片等，需要依照情况自行设置值）自行设置最大值，例如CGSizeMake(MHS_SCREEN_WIDTH - 100, NavigationBarHeight);
+@property(nonatomic, assign) CGSize defaultTitleLabelSize;
+
 #pragma mark - Loading
 
 @property(nonatomic, strong, readonly) UIActivityIndicatorView *loadingView;

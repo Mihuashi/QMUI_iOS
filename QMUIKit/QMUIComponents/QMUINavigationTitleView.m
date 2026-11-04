@@ -123,6 +123,11 @@
 }
 
 - (void)updateTitleLabelSize {
+    if (QMUIHelper.isUsedLiquidGlass) {
+        if (self.defaultTitleLabelSize.width != 0 && self.defaultTitleLabelSize.height != 0) {
+            return;
+        }
+    }
     if (self.titleLabel.text.length > 0) {
         // 这里用 CGSizeCeil 是特地保证 titleView 的 sizeThatFits 计算出来宽度是 pt 取整，这样在 layoutSubviews 我们以 px 取整时，才能保证不会出现水平居中时出现半像素的问题，然后由于我们对半像素会认为一像素，所以导致总体宽度多了一像素，从而导致文字布局可能出现缩略...
         self.titleLabelSize = CGSizeCeil([self.titleLabel sizeThatFits:CGSizeMax]);
@@ -376,6 +381,15 @@
 
 
 #pragma mark - setter / getter
+
+///为了兼容 Xcode 27 的LiquidGlass  self.title更新赋值 留白1s闪一下的问题，只有iOS27 及以上版本使用
+- (void)setDefaultTitleLabelSize:(CGSize)defaultTitleLabelSize {
+    _defaultTitleLabelSize = defaultTitleLabelSize;
+    if (QMUIHelper.isUsedLiquidGlass) {
+        self.titleLabelSize = defaultTitleLabelSize;
+        [self refreshLayout];
+    }
+}
 
 - (void)setMaximumWidth:(CGFloat)maximumWidth {
     if (_maximumWidth != maximumWidth) {
