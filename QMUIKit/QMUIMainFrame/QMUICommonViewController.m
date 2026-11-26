@@ -20,6 +20,7 @@
 #import "NSString+QMUI.h"
 #import "NSObject+QMUI.h"
 #import "UIViewController+QMUI.h"
+#import "UINavigationController+QMUI.h"
 #import "UIGestureRecognizer+QMUI.h"
 #import "UIView+QMUI.h"
 #import "QMUINavigationButton.h"
@@ -240,8 +241,14 @@
 }
 
 - (void)customBackAction {
-    if (self.navigationController) {
-        [self.navigationController popViewControllerAnimated:YES];
+    UINavigationController *navigationController = self.navigationController;
+    if (navigationController) {
+        // 自绘返回键替换了系统返回键，不再经过 _UINavigationBarContentView 的 __backButtonAction:，
+        // 所以这里要自己询问 UINavigationControllerBackButtonHandlerProtocol，保持和系统返回键一致
+        if (![navigationController canPopViewController:navigationController.topViewController byPopGesture:NO]) {
+            return;
+        }
+        [navigationController popViewControllerAnimated:YES];
     } else {
         [self dismissViewControllerAnimated:YES completion:nil];
     }

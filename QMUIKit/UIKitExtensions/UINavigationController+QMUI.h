@@ -84,6 +84,10 @@ typedef void (^QMUINavigationActionDidChangeBlock)(QMUINavigationAction action, 
 - (NSArray<UIViewController *> *)qmui_popToViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(void (^_Nullable)(void))completion;
 - (NSArray<UIViewController *> *)qmui_popToRootViewControllerAnimated:(BOOL)animated completion:(void (^_Nullable)(void))completion;
 
+/// 询问 viewController 是否允许返回，内部会调用 UINavigationControllerBackButtonHandlerProtocol。
+/// 系统返回键、侧滑手势以及自绘返回键（customBackAction）都经过这里，自定义返回按钮时也请先调用它。
+- (BOOL)canPopViewController:(UIViewController *)viewController byPopGesture:(BOOL)byPopGesture;
+
 @end
 
 
